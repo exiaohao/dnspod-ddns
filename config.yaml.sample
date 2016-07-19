@@ -1,0 +1,6 @@
+email: yourmail@mail.com
+password: yourpassword
+app_token: YOUR_TOKEN
+domains:
+  - YOUR_DOMAINS.DOMAIN
+
