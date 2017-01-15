@@ -1,0 +1,3 @@
+list: https://dnsapi.cn/Record.List
+ddns: https://dnsapi.cn/Record.Ddns
+modify: https://dnsapi.cn/Record.Modify

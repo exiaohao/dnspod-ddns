@@ -26,9 +26,26 @@ def record_info(domain, sub_domain):
 
 
 @hug.get('/update_addr')
-def happy_birthday(domain: str, sub_domain: str, ip_addr: str):
-    domain_info = record_info(domain, sub_domain)
-    print('Domain Info:\n', domain_info)
+def update_addr(domain: str, sub_domain: str, ip_addr: str):
+    full_domain = '{sub_domain}.{domain}'.format(sub_domain=sub_domain, domain=domain)
+    if 'domains' in USER_CONFIG and full_domain not in USER_CONFIG['domains']:
+        return {
+            "status":{
+                "message": "Domain not allowed",
+                "code": "-2",
+            }
+        }
+
+    try:
+        domain_info = record_info(domain, sub_domain)
+    except KeyError:
+        return {
+            "status":{
+                 "message": "Domain not registered!",
+                 "code": "-1",
+            }
+        }
+
     payload = {
         "login_email": USER_CONFIG['email'],
         "login_password": USER_CONFIG['password'],
