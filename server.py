@@ -39,7 +39,7 @@ def happy_birthday(domain: str, sub_domain: str, ip_addr: str):
         "record_line": '默认',
         "value": ip_addr
     }
-    print(payload)
+    # print(payload)
     #p = ["{}={}".format(k ,v) for k, v in payload.items()]
     #print('&'.join(p))
     r = requests.post(DNSPOD_CONFIG['ddns'], data=payload, headers=HEADERS)
