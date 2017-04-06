@@ -1,6 +1,7 @@
 import hug
 import yaml
 import json
+import socket
 import requests
 
 def get_config(name):
@@ -33,6 +34,15 @@ def update_addr(domain: str, sub_domain: str, ip_addr: str):
             "status":{
                 "message": "Domain not allowed",
                 "code": "-2",
+            }
+        }
+
+    current_host = socket.gethostbyname(full_domain)
+    if current_host == ip_addr:
+        return {
+            "status":{
+                "message": "IP not changed",
+                "code": -3,
             }
         }
 
