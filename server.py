@@ -25,8 +25,13 @@ def record_info(domain, sub_domain):
         "sub_domain": sub_domain
     }
     r = requests.post(DNSPOD_CONFIG['list'], data=data, timeout=5)
-    print(r.json())
+    #print(r.json())
     return r.json()['records'][0]
+
+
+@hug.get('/')
+def default():
+    return {"status": 405, "message": "method not allowed!"}
 
 
 @hug.get('/update_addr')
@@ -34,29 +39,23 @@ def update_addr(domain: str, sub_domain: str, ip_addr: str):
     full_domain = '{sub_domain}.{domain}'.format(sub_domain=sub_domain, domain=domain)
     if 'domains' in USER_CONFIG and full_domain not in USER_CONFIG['domains']:
         return {
-            "status":{
-                "message": "Domain not allowed",
-                "code": "-2",
-            }
+            "message": "Domain not allowed",
+            "status": "-2",
         }
 
     current_host = socket.gethostbyname(full_domain)
     if current_host == ip_addr:
         return {
-            "status":{
-                "message": "IP not changed",
-                "code": -3,
-            }
+            "message": "IP not changed",
+            "code": -3,
         }
 
     try:
         domain_info = record_info(domain, sub_domain)
     except KeyError:
         return {
-            "status":{
-                 "message": "Domain not registered!",
-                 "code": "-1",
-            }
+            "message": "Domain not registered!",
+            "code": "-1",
         }
 
     payload = {
@@ -73,5 +72,9 @@ def update_addr(domain: str, sub_domain: str, ip_addr: str):
     #p = ["{}={}".format(k ,v) for k, v in payload.items()]
     #print('&'.join(p))
     r = requests.post(DNSPOD_CONFIG['ddns'], data=payload, headers=HEADERS)
-    return r.json()
+    result = r.json()
+    return {
+        "code": "200" if result['status']['code'] == "1" else result['status']['code'],
+        "message": result['status']['message'],
+    }
 
