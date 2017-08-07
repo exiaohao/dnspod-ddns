@@ -1,4 +1,4 @@
-FROM python:3.5.2
+FROM daocloud.io/library/python:3.6.1
 ENV PYTHONUNBUFFERED 1
 RUN mkdir /code
 WORKDIR /code
