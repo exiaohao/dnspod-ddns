@@ -1,3 +1,6 @@
+from gevent import monkey
+monkey.patch_all()
+
 import hug
 import yaml
 import json
