@@ -2,7 +2,7 @@ version: '2'
 services:
   ddns_service:
     build: .
-    command: hug -f server.py > access.log
+    command: gunicorn server:__hug_wsgi__ -k gevent --bind 0.0.0.0:8000 --log-level DEBUG --log-file access.log
     volumes:
       - .:/code
     ports:

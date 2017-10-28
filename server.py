@@ -1,7 +1,11 @@
 import hug
 import yaml
 import json
+import socket
 import requests
+import logging
+
+logger = logging.Logger(__name__)
 
 def get_config(name):
     with open(name) as f:
@@ -24,6 +28,14 @@ def record_info(domain, sub_domain):
     print(r.json())
     return r.json()['records'][0]
 
+@hug.get('/')
+def welcome():
+    return {
+        "status": {
+            "message": "welcome!",
+            "code": 200,
+        }
+    }
 
 @hug.get('/update_addr')
 def update_addr(domain: str, sub_domain: str, ip_addr: str):
@@ -33,6 +45,19 @@ def update_addr(domain: str, sub_domain: str, ip_addr: str):
             "status":{
                 "message": "Domain not allowed",
                 "code": "-2",
+            }
+        }
+
+    try:
+        current_host = socket.gethostbyname(full_domain)
+    except:
+        current_host = None
+
+    if current_host == ip_addr:
+        return {
+            "status":{
+                "message": "IP not changed",
+                "code": -3,
             }
         }
 
@@ -60,5 +85,6 @@ def update_addr(domain: str, sub_domain: str, ip_addr: str):
     #p = ["{}={}".format(k ,v) for k, v in payload.items()]
     #print('&'.join(p))
     r = requests.post(DNSPOD_CONFIG['ddns'], data=payload, headers=HEADERS)
+    logger.info(r)
     return r.json()
 

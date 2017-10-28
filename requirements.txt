@@ -1,2 +1,4 @@
+gunicorn
+gevent
 hug
 PyYAML
