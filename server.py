@@ -43,12 +43,16 @@ def update_addr(domain: str, sub_domain: str, ip_addr: str):
             "status": "-2",
         }
 
-    current_host = socket.gethostbyname(full_domain)
-    if current_host == ip_addr:
-        return {
-            "message": "IP not changed",
-            "code": -3,
-        }
+    try:
+        current_host = socket.gethostbyname(full_domain)
+    except:
+        pass
+    else:
+        if current_host == ip_addr:
+            return {
+                "message": "IP not changed",
+                "code": -3,
+            }
 
     try:
         domain_info = record_info(domain, sub_domain)
