@@ -46,7 +46,10 @@ def update_addr(domain: str, sub_domain: str, ip_addr: str):
     try:
         current_host = socket.gethostbyname(full_domain)
     except:
-        pass
+        return {
+            "message": "Cannot resolve domain",
+            "status": "-3",
+        }
     else:
         if current_host == ip_addr:
             return {
